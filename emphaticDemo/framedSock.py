@@ -2,14 +2,18 @@ import re
 
 class FramedStreamSock:
      sockNum = 0
+     ##### Constructor
      def __init__(self, sock, debug=False, name=None):
           self.sock, self.debug = sock, debug
+          ##### Same rbuf as before
           self.rbuf = b""       # receive buffer
           if name:
                self.name = name
           else:                 # make default name
                self.name = "FramedStreamSock-%d" % FramedStreamSock.sockNum
                FramedStreamSock.sockNum += 1
+     ##### Self is just the instance of class, this
+     ##### If you print (sock), it just prints name
      def __repr__(self):
           return self.name
      def sendmsg(self, payload):
@@ -23,7 +27,7 @@ class FramedStreamSock:
           msgLength = -1
           while True:
                if (state == "getLength"):
-                    match = re.match(b'([^:]+):(.*)', self.rbuf) # look for colon
+                    match = re.match(b'([^:]+):(.*)', self.rbuf, re.DOTALL | re.MULTILINE) # look for colon
                     if match:
                          lengthStr, self.rbuf = match.groups()
                          try: 
